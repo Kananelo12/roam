@@ -1,5 +1,109 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css";
+@import "tailwindcss/utilities.css" source(none);
 
 @import "nativewind/theme";
+
+/* Only generate classes used in app source, not docs or agent skill files. */
+@source "./";
+
+/*
+ * Roam design tokens. This file is the single source of truth for every
+ * visual value in the app; components consume tokens through utility classes.
+ *
+ * Default Tailwind palettes, type sizes, radii, shadows and font weights are
+ * reset with `initial` so only Roam tokens exist (no `text-blue-500` drift).
+ */
+
+:root {
+  /* Native defaults to 14px rem; pin it to 16 so the 4pt spacing grid
+     (p-1 = 4, p-4 = 16, ...) is identical on iOS, Android and web. */
+  font-size: 16px;
+}
+
+@theme {
+  /* Colors */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Primary Yellow: primary actions, active states, rating stars */
+  --color-primary: #ffc629;
+  --color-primary-soft: #fff6da;
+  --color-on-primary: #0b0b1a;
+
+  /* Lavender: secondary actions, highlights, selected chips, focus */
+  --color-secondary: #c9b4ff;
+  --color-secondary-soft: #f3eeff;
+  --color-secondary-strong: #6a4cf5;
+  --color-on-secondary: #0b0b1a;
+
+  /* Text */
+  --color-foreground: #0b0b1a;
+  --color-muted-foreground: #6b7280;
+  --color-placeholder: #9ca3af;
+
+  /* Surfaces */
+  --color-surface: #ffffff; /* cards, sheets, modals */
+  --color-surface-muted: #f4f5f7; /* app background, input fields, chips */
+  --color-border: #e5e7eb; /* dividers, borders */
+  --color-glass: rgb(255 255 255 / 0.7); /* tab bar, glass surfaces */
+
+  /* Status */
+  --color-success: #1f9d55;
+  --color-success-soft: #e7f6ed;
+  --color-danger: #e5484d;
+  --color-danger-soft: #fdecee;
+  --color-info: #3b5bdb;
+  --color-info-soft: #eaefff;
+
+  /* Fonts: one static file per weight, family name = PostScript name.
+     Swap the brand typeface here (and in app.json + src/theme/fonts.ts). */
+  --font-body: "Urbanist-Regular";
+  --font-body-medium: "Urbanist-Medium";
+  --font-body-semibold: "Urbanist-SemiBold";
+  --font-display: "Urbanist-Bold";
+  --font-display-heavy: "Urbanist-ExtraBold";
+
+  /* Weight comes from the font family, never fontWeight. */
+  --font-weight-*: initial;
+
+  /* Type scale (size / line height / tracking). Line heights MUST be unitless
+     ratios: NativeWind multiplies var()-based line heights by the font size on
+     native, so a px value (56px) renders as 56 x 56. Comments give the px. */
+  --text-*: initial;
+  --text-display: 56px;
+  --text-display--line-height: 1; /* 56 */
+  --text-display--letter-spacing: -1.5px;
+  --text-title: 30px;
+  --text-title--line-height: 1.2; /* 36 */
+  --text-title--letter-spacing: -0.6px;
+  --text-headline: 20px;
+  --text-headline--line-height: 1.3; /* 26 */
+  --text-headline--letter-spacing: -0.2px;
+  --text-button: 17px;
+  --text-button--line-height: 1.2941; /* 22 */
+  --text-body: 16px;
+  --text-body--line-height: 1.5; /* 24 */
+  --text-caption: 14px;
+  --text-caption--line-height: 1.4286; /* 20 */
+  --text-label: 12px;
+  --text-label--line-height: 1.3333; /* 16 */
+
+  /* Radii */
+  --radius-*: initial;
+  --radius-sm: 8px; /* small icon tiles */
+  --radius-md: 12px; /* alerts, thumbnails */
+  --radius-lg: 16px; /* inputs, listing images */
+  --radius-xl: 20px; /* policy cards, list groups */
+  --radius-2xl: 24px; /* listing cards, sheets */
+  --radius-3xl: 32px; /* hero media */
+  /* Pills and circles (buttons, chips, badges, icon buttons): rounded-full */
+
+  /* Shadows (React Native boxShadow) */
+  --shadow-*: initial;
+  --shadow-card: 0 1px 2px rgb(11 11 26 / 0.04), 0 4px 16px rgb(11 11 26 / 0.06);
+  --shadow-raised: 0 8px 24px rgb(11 11 26 / 0.1);
+  --shadow-floating: 0 12px 32px rgb(11 11 26 / 0.14);
+}

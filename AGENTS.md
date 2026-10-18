@@ -8,7 +8,7 @@ This file is the project's memory: it holds every decision that is still true. P
 
 ```bash
 npx expo install <package>  # ALWAYS use instead of npm install: resolves SDK-compatible versions
-npx expo start              # dev server (press i for the iOS simulator)
+npx expo start              # dev server (open in Expo Go on the Android phone)
 npx expo lint               # lint
 npx tsc --noEmit            # type check
 npx expo-doctor             # diagnose dependency and config issues
@@ -21,7 +21,20 @@ npx eas-cli@latest <cmd>    # EAS builds, submits, and updates (use instead of b
 - Expo ships breaking changes every SDK release, so don't trust memory. Before touching an Expo, EAS, or React Native API, check the `expo` major version in `package.json` and read `https://docs.expo.dev/versions/v<major>.0.0/`. For anything else, start from https://docs.expo.dev/llms.txt and follow its links.
 - Routes live in `src/app/`: every file is a screen and `_layout.tsx` files define navigators. API routes are `src/app/api/*+api.ts`. Keep components, hooks, and utils outside `src/app/`.
 - `ios/` and `android/` are generated. Never create or edit them by hand; configure native behavior in `app.json` and config plugins.
-- Expo Go only includes its bundled native modules. After adding a library with native code, switch to a development build (`npx expo run:ios`).
+- Expo Go only includes its bundled native modules. The app runs in Expo Go today. After adding a library that Expo Go doesn't include, switch to a development build (`npx eas-cli@latest build --profile development --platform android`).
+
+## Styling
+
+- NativeWind v5 RC (`nativewind` + `react-native-css`) and Tailwind 4.1.12 are pinned exact, with a `lightningcss` override in `package.json`. Upgrade them together, following the NativeWind upgrade guide, never one at a time.
+- Style with `className`. After CSS or Metro config changes, or after installing a package, restart with `npx expo start --clear`.
+- Tokens live only in the `@theme` block in `src/global.css`. Tailwind's defaults are reset, so add a token there before using a new value. Never hardcode hex, font size, or spacing in components.
+- rem is 16 on every platform, and spacing follows the 4pt Tailwind scale. The screen gutter is `px-5`.
+- Line-height tokens are unitless ratios. NativeWind multiplies `var()`-based line heights by the font size on native.
+- Weight comes from the font family (`font-body*`, `font-display*`), never `font-bold` or `fontWeight`. Fonts load at runtime with `useAppFonts` while the app runs in Expo Go.
+- Build screens from `src/components/ui`. Text renders through `Text`. A component's `className` is for layout only; color comes from its `variant` and `tone` props.
+- Icons are Lucide, rendered through `Icon` and imported one icon at a time (`lucide-react-native/icons/<name>`), never from the package index.
+- `src/theme/colors.ts` mirrors the colors for props that can't take a class. Update it whenever `global.css` colors change.
+- The app is light-only (`userInterfaceStyle: light`).
 
 ## Who owns what
 
@@ -71,7 +84,8 @@ Designs are attached in the chat. Screens must match them exactly: layout, spaci
 - Icons, fonts, and brand images come from `assets/` or the chosen icon library, never recreated from a screenshot. Sample property photos may be remote placeholder images. If an asset is missing, use a marked placeholder and list it.
 - Map every color, font, spacing value, and radius to a design-system token. List values with no token in the plan as proposed new tokens instead of hardcoding them. When creating the design system itself, derive the tokens from the designs.
 - UI plans describe the design (elements, states, tokens, assets) well enough to build without the image. If building in a new session, ask for the design to be attached again.
-- After building, open the screen in the iOS simulator (deep link with `xcrun simctl openurl booted <url>` when it isn't the first screen; the scheme is in `app.json`), take a screenshot (`xcrun simctl io booted screenshot <path>`), and compare it with the design. List every difference, fix, and repeat. Report which values were estimated from an image.
+- After building, open the screen in Expo Go on the user's Android phone, connected over USB with debugging on. When it isn't the first screen, deep link with `adb shell am start -a android.intent.action.VIEW -d "<expo-go-url>/--/<path>"`. Take a screenshot with `adb exec-out screencap -p > <path>` and compare it with the design. List every difference, fix, and repeat. Report which values were estimated from an image.
+- Development is on Windows, so there's no local iOS simulator. Check iOS on the EAS cloud simulator before releases.
 
 ## Reporting
 
