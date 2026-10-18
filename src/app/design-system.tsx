@@ -17,7 +17,16 @@ import Waves from "lucide-react-native/icons/waves-horizontal";
 import { useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 
-import { Badge, Button, Chip, Icon, IconButton, Text, TextField } from "@/components/ui";
+import {
+  Badge,
+  Button,
+  Chip,
+  Icon,
+  IconButton,
+  Text,
+  TextField,
+  Wordmark,
+} from "@/components/ui";
 
 const filters = ["Cabins", "Under $300", "Pet Friendly", "Quiet"];
 const categories = [
@@ -40,6 +49,14 @@ export default function DesignSystemScreen() {
         contentContainerClassName="gap-10 px-5 py-8"
         contentInsetAdjustmentBehavior="automatic"
       >
+        <Section title="Brand">
+          <Wordmark size="lg" />
+          <Wordmark size="sm" />
+          <View className="self-start rounded-xl bg-foreground p-5 corner-squircle">
+            <Wordmark size="lg" tone="inverse" />
+          </View>
+        </Section>
+
         <Section title="Typography">
           <Text variant="display">Find your next stay</Text>
           <Text variant="title">Modern Cabin with Hot Tub</Text>

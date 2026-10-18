@@ -1,0 +1,86 @@
+# 05 · Wordmark
+
+Status: done
+
+## Goal
+
+The Roam wordmark, a heavy lowercase "roam", exists as a real vector asset and a design-system component. Every screen that shows the logo uses it: Home, Profile, Auth and Onboarding headers.
+
+## Decisions
+
+- **Built from font outlines.** A one-off script turns the glyphs for "roam" in **Urbanist Black (900)** into SVG paths with tightened letter spacing. The output is a committed asset, so the font isn't needed at runtime.
+- **Black, not the shipped ExtraBold**, because it's closest to the logo's weight in the designs. `Urbanist-Black.ttf` lives in `assets/brand/source/` for the script only. It isn't loaded by the app or added to `fontFiles`.
+- **Outputs:**
+  - `assets/brand/roam-wordmark.svg`, for design tools, web and later exports.
+  - `src/components/ui/wordmark-path.ts`, a generated file that exports the `viewBox` and path data. The component imports it, so no SVG transformer or Metro change is needed.
+- **The script is `scripts/generate-wordmark.mjs`**, run with `node scripts/generate-wordmark.mjs`. It uses `opentype.js`, which is a new dev dependency and needs your approval through this plan. The generated files carry a "do not edit" header naming the script.
+- **Letter spacing:** -2% of the font size, a starting estimate. Step 4 tunes it against the designs, where the letters nearly touch.
+- **`Wordmark` component**, in `src/components/ui/wordmark.tsx`, renders with react-native-svg (already installed).
+  - `size`: `sm` is 20 high (auth header) and `lg` is 36 high (Home, Profile, Onboarding). Width follows the aspect ratio. Both heights are estimated from the mockups.
+  - `tone`: `default` (`foreground` #0B0B1A) or `inverse` (white). The color comes from the colors mirror, since an SVG fill can't take a class.
+  - `accessibilityRole="image"` with `accessibilityLabel="roam"`.
+  - `className` is for layout only, as with every primitive.
+- **Preview:** a new **Brand** section at the top of `/design-system` shows both sizes, plus `inverse` on a `foreground` tile.
+
+## Out of scope
+
+- App icon, adaptive icon, favicon and splash screen. They need a square mark and get their own plan.
+- Placing the wordmark on product screens. Each screen's own plan does that.
+- PNG exports.
+
+## Steps
+
+### 1. Source font and generator
+
+Add `opentype.js` as a dev dependency (`npx expo install opentype.js -- --save-dev`). Copy `Urbanist_900Black.ttf` from `@expo-google-fonts/urbanist` (unpack it with `npm pack`; don't add that package) to `assets/brand/source/Urbanist-Black.ttf`, along with its OFL license.
+
+Write `scripts/generate-wordmark.mjs`. It should:
+1. Load the font and lay out "roam" with tracking `TRACKING_EM = -0.02`, applied between glyphs.
+2. Take one combined path with `font.getPath` and the glyph advance plus tracking.
+3. Compute the tight bounding box and translate the path to 0,0.
+4. Write `assets/brand/roam-wordmark.svg` (`fill="#0B0B1A"`, tight `viewBox`) and `src/components/ui/wordmark-path.ts` (`export const wordmark = { width, height, d }`, numbers rounded to 2 decimals).
+
+Done when both files exist and the SVG opens showing "roam".
+
+### 2. Wordmark component
+
+Create `src/components/ui/wordmark.tsx`. It renders `<Svg viewBox="0 0 {width} {height}" height={h} width={h * width / height}>` with one `<Path d fill>`. `h` comes from `size` (`sm` 20, `lg` 36) and `fill` comes from `tone`, using `colors.foreground` or `colors.white`. Wrap it in a `View` that carries `className` and the accessibility props.
+
+Export it from `src/components/ui/index.ts`.
+
+### 3. Preview
+
+In `src/app/design-system.tsx`, add a **Brand** section first: `Wordmark` at `lg` and `sm`, then `inverse` on a `bg-foreground rounded-xl p-5` tile.
+
+### 4. Visual check and tuning
+
+Open `/design-system` in Expo Go on the Android phone and screenshot the Brand section with adb. Compare it with the "roam" in the design-system reference ("01. Brand") and in the home, profile and auth mockups. Look at weight, letter spacing and proportions.
+
+If the letters sit looser or tighter than the reference, change `TRACKING_EM`, rerun the script, and check again.
+
+## Verification
+
+- `node scripts/generate-wordmark.mjs` runs cleanly and is repeatable: a second run produces identical files.
+- `npx tsc --noEmit` and `npx expo lint` pass.
+- `npx expo export --platform android --platform web` succeeds, and `Urbanist-Black.ttf` is not in the exported assets.
+- On the phone, the Brand section shows a crisp "roam" at both sizes with no font-loading flash, and the inverse tile reads clearly.
+- End to end: the screenshot sits next to the reference "roam" with matching weight and letter spacing, and every remaining difference is listed.
+
+## AGENTS.md updates
+
+Under **Styling**:
+
+- The logo is `components/ui/Wordmark` (`size` `sm` or `lg`, `tone` `default` or `inverse`). Never set "roam" in a text style.
+- `assets/brand/roam-wordmark.svg` and `wordmark-path.ts` are generated by `scripts/generate-wordmark.mjs` from Urbanist Black. Edit the script, never the outputs.
+
+## Result
+
+Done.
+- **Generator:** `scripts/generate-wordmark.mjs` builds "roam" from the Urbanist Black outlines, with -2% letter spacing and kerning, into a 224.75 × 52.7 viewBox. It writes `assets/brand/roam-wordmark.svg` and `src/components/ui/wordmark-path.ts`, and repeated runs give identical files.
+- **opentype.js bug:** version 2.0's `toPathData` emits `NaN` for some values, so the script writes the path data itself and fails if any `NaN` appears.
+- **Component:** `Wordmark` (sm 20, lg 36; default and inverse tones) is exported from `components/ui`, and a Brand section opens `/design-system`.
+- **Checks:**
+  - Type check, lint, and the Android and web exports pass.
+  - The Black font file is not in the exported app.
+  - You checked it on the Android phone and confirmed it looks right, so the -2% letter spacing was kept without further tuning.
+- **Estimated from the mockups:** the sm and lg heights, and the letter spacing.

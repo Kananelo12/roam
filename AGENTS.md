@@ -35,6 +35,7 @@ npx eas-cli@latest <cmd>    # EAS builds, submits, and updates (use instead of b
 - Icons are Lucide, rendered through `Icon` and imported one icon at a time (`lucide-react-native/icons/<name>`), never from the package index.
 - `src/theme/colors.ts` mirrors the colors for props that can't take a class. Update it whenever `global.css` colors change.
 - The app is light-only (`userInterfaceStyle: light`).
+- The logo is `components/ui/Wordmark` (`size` `sm` or `lg`, `tone` `default` or `inverse`). Never set "roam" in a text style. `assets/brand/roam-wordmark.svg` and `wordmark-path.ts` are generated from Urbanist Black by `scripts/generate-wordmark.mjs`; edit the script and rerun it, never the outputs.
 
 ## Who owns what
 
