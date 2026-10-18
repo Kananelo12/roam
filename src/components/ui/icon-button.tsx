@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 const variants = {
   muted: "bg-surface-muted", // on white surfaces
   surface: "bg-surface shadow-card", // floating over photos
+  outline: "border border-border bg-surface", // headers on white (auth back button)
   primary: "bg-primary",
 } as const;
 

@@ -20,6 +20,10 @@ npx eas-cli@latest <cmd>    # EAS builds, submits, and updates (use instead of b
 
 - Expo ships breaking changes every SDK release, so don't trust memory. Before touching an Expo, EAS, or React Native API, check the `expo` major version in `package.json` and read `https://docs.expo.dev/versions/v<major>.0.0/`. For anything else, start from https://docs.expo.dev/llms.txt and follow its links.
 - Routes live in `src/app/`: every file is a screen and `_layout.tsx` files define navigators. API routes are `src/app/api/*+api.ts`. Keep components, hooks, and utils outside `src/app/`.
+- `/` is onboarding in the `(onboarding)` group. Auth lives in the `(auth)` group (`/sign-up`, `/verify-email`, `/sign-in`). Onboarding's buttons and Skip all go to `/sign-up`.
+- Routes are gated with `Stack.Protected` in the root layout: `(onboarding)` and `(auth)` only while signed out, app routes (`/home` for now) only while signed in. Signing in or out changes the session; the guard does the navigation, so screens never route after auth.
+- If `tsc` reports a valid route as missing or lists component files as routes, the typed-routes file went stale during hot reload: delete `.expo/types/router.d.ts` and ask the user to restart their dev server.
+- Use the user's running dev server (usually port 8081) for phone checks; never start another one. Before every adb tap, confirm Expo Go is in the foreground, and only type when the keyboard is up.
 - `ios/` and `android/` are generated. Never create or edit them by hand; configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. The app runs in Expo Go today. After adding a library that Expo Go doesn't include, switch to a development build (`npx eas-cli@latest build --profile development --platform android`).
 
@@ -36,12 +40,14 @@ npx eas-cli@latest <cmd>    # EAS builds, submits, and updates (use instead of b
 - `src/theme/colors.ts` mirrors the colors for props that can't take a class. Update it whenever `global.css` colors change.
 - The app is light-only (`userInterfaceStyle: light`).
 - The logo is `components/ui/Wordmark` (`size` `sm` or `lg`, `tone` `default` or `inverse`). Never set "roam" in a text style. `assets/brand/roam-wordmark.svg` and `wordmark-path.ts` are generated from Urbanist Black by `scripts/generate-wordmark.mjs`; edit the script and rerun it, never the outputs.
+- Third-party brand marks (such as the Google G) live in `assets/brand/` and render through an SVG path component in `components/ui` (`GoogleLogo`). Their colors stay with the paths, not in tokens.
+- Photos render through `expo-image` from remote URLs (Unsplash placeholders until stays come from Sanity).
 
 ## Who owns what
 
 Each tool has one job. Ask before moving a responsibility to a different tool.
 
-- **Auth:** Clerk is the source of truth. The app keeps its own custom auth screens. Set Clerk up through the Clerk CLI and use the Clerk MCP for current Expo patterns.
+- **Auth:** Clerk is the source of truth. The app keeps its own custom auth screens. Set Clerk up through the Clerk CLI and use the Clerk MCP for current Expo patterns. Until then, auth is mocked in `src/lib/auth/mock-auth.ts` (code `424242`, demo `guest@roam.dev` / `password123`) behind `useAuth()`. Screens use only `useAuth()`, so Clerk replaces that module, not the screens.
 - **Content:** Sanity (properties, hosts, policies, house rules). Studio is a standalone app in `studio/`. Schema deploys and content changes go through the Sanity MCP, and generated property copy uses Agent Actions.
 - **Exact constraints** (price, guests, type, amenities, pets, place): GROQ filters, with values always passed as params.
 - **Soft intent** (quiet, cozy, secluded): Dataset Embeddings via `text::semanticSimilarity()` inside `score()`.

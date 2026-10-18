@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import ArrowRight from "lucide-react-native/icons/arrow-right";
 import Bookmark from "lucide-react-native/icons/bookmark";
 import Building from "lucide-react-native/icons/building";
+import ChevronLeft from "lucide-react-native/icons/chevron-left";
 import EyeOff from "lucide-react-native/icons/eye-off";
 import Heart from "lucide-react-native/icons/heart";
 import House from "lucide-react-native/icons/house";
@@ -85,6 +86,7 @@ export default function DesignSystemScreen() {
             <IconButton accessibilityLabel="Share" icon={<Icon as={Share} />} />
             <IconButton accessibilityLabel="Search" icon={<Icon as={Search} />} />
             <IconButton accessibilityLabel="Bookmark" icon={<Icon as={Bookmark} />} />
+            <IconButton accessibilityLabel="Back" variant="outline" size="sm" icon={<Icon as={ChevronLeft} />} />
           </View>
         </Section>
 
@@ -106,6 +108,13 @@ export default function DesignSystemScreen() {
             placeholder="you@example.com"
             keyboardType="email-address"
             autoCapitalize="none"
+            leading={<Icon as={Mail} />}
+          />
+          <TextField
+            label="Email address"
+            placeholder="you@example.com"
+            defaultValue="guest@roam"
+            error="Enter a valid email address."
             leading={<Icon as={Mail} />}
           />
         </Section>

@@ -49,6 +49,8 @@
   --color-surface-muted: #f4f5f7; /* app background, input fields, chips */
   --color-border: #e5e7eb; /* dividers, borders */
   --color-glass: rgb(255 255 255 / 0.7); /* tab bar, glass surfaces */
+  --color-scrim: rgb(11 11 26 / 0.45); /* dark glass pills over photos */
+  --color-glass-border: rgb(255 255 255 / 0.35); /* hairline on glass over photos */
 
   /* Status */
   --color-success: #1f9d55;
@@ -76,6 +78,9 @@
   --text-display: 56px;
   --text-display--line-height: 1; /* 56 */
   --text-display--letter-spacing: -1.5px;
+  --text-hero: 36px;
+  --text-hero--line-height: 1.0833; /* 39 */
+  --text-hero--letter-spacing: -1px;
   --text-title: 30px;
   --text-title--line-height: 1.2; /* 36 */
   --text-title--letter-spacing: -0.6px;

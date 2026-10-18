@@ -4,6 +4,7 @@ import { cn } from "@/lib/cn";
 
 const variants = {
   display: "font-display text-display", // hero headlines, 56/56
+  hero: "font-display-heavy text-hero", // onboarding titles, 36/39
   title: "font-display text-title", // screen and section headings, 30/36
   headline: "font-display text-headline", // card titles, prices, 20/26
   subhead: "font-body-semibold text-body", // row titles, 16/24
