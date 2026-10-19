@@ -1,3 +1,5 @@
+import { ClerkProvider } from "@clerk/expo";
+import { tokenCache } from "@clerk/expo/token-cache";
 import "@/global.css";
 
 import { Stack } from "expo-router";
@@ -7,6 +9,12 @@ import { useEffect } from "react";
 
 import { useAppFonts } from "@/hooks/use-app-fonts";
 import { AuthProvider, useAuth } from "@/lib/auth";
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
+
+if (!publishableKey) {
+  throw new Error("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY. Add your key to .env.local.\nRun: 1) clerk auth login  2) clerk link  3) clerk env pull — then restart the dev server.");
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,11 +28,13 @@ export default function RootLayout() {
   if (!fontsReady) return null;
 
   return (
-    <AuthProvider>
-      {/* Light-only app: dark status bar content everywhere. */}
-      <StatusBar style="dark" />
-      <RootStack />
-    </AuthProvider>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <AuthProvider>
+        {/* Light-only app: dark status bar content everywhere. */}
+        <StatusBar style="dark" />
+        <RootStack />
+      </AuthProvider>
+    </ClerkProvider>
   );
 }
 
