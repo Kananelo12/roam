@@ -3,6 +3,7 @@ import Calendar from "lucide-react-native/icons/calendar";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { TabBarSpacer } from "@/components/navigation/tab-bar-spacer";
 import { Button, Icon, Text } from "@/components/ui";
 
 /** Placeholder until booking exists: every guest has no trips yet. */
@@ -22,6 +23,7 @@ export default function TripsScreen() {
         </Text>
         <Button title="Find a stay" size="sm" className="mt-3" onPress={() => router.navigate("/home")} />
       </View>
+      <TabBarSpacer />
     </View>
   );
 }

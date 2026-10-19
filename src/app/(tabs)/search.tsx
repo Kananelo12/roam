@@ -6,6 +6,7 @@ import { Pressable, View } from "react-native";
 import Animated, { Keyframe, LinearTransition } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { TabBarSpacer } from "@/components/navigation/tab-bar-spacer";
 import { QueryChips } from "@/components/search/query-chips";
 import { ResultRow } from "@/components/search/result-row";
 import { SortButton, SortMenu } from "@/components/search/sort-menu";
@@ -100,7 +101,7 @@ function SearchResults({ query, sort, onSortChange }: SearchResultsProps) {
           renderItem={({ item }) => <ResultRow result={item} />}
           itemLayoutAnimation={ROW_REFLOW}
           ItemSeparatorComponent={RowGap}
-          ListFooterComponent={RowGap}
+          ListFooterComponent={ListEnd}
           ListEmptyComponent={EmptyResults}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
@@ -113,6 +114,16 @@ function SearchResults({ query, sort, onSortChange }: SearchResultsProps) {
 
 function RowGap() {
   return <View className="h-4" />;
+}
+
+/** Space after the last row, clear of the Android tab bar. */
+function ListEnd() {
+  return (
+    <>
+      <RowGap />
+      <TabBarSpacer />
+    </>
+  );
 }
 
 function EmptyResults() {

@@ -7,6 +7,7 @@ import { CategoryChips } from "@/components/home/category-chips";
 import { HomeHeader, HomeIntro } from "@/components/home/home-header";
 import { SearchPill } from "@/components/home/search-pill";
 import { StayCard } from "@/components/home/stay-card";
+import { TabBarSpacer } from "@/components/navigation/tab-bar-spacer";
 import { AnimatedView } from "@/components/ui";
 import { stays, type StayType } from "@/data/stays";
 import { useAuth } from "@/lib/auth";
@@ -60,6 +61,7 @@ export default function HomeScreen() {
           </AnimatedView>
         ))}
       </View>
+      <TabBarSpacer />
     </ScrollView>
   );
 }

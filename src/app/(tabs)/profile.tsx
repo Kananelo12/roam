@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { TabBarSpacer } from "@/components/navigation/tab-bar-spacer";
 import { Avatar, Button, Text } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 
@@ -20,6 +21,7 @@ export default function ProfileScreen() {
         <Text tone="muted">{session?.email}</Text>
       </View>
       <Button title="Sign out" variant="secondary" className="mt-auto" onPress={signOut} />
+      <TabBarSpacer />
     </View>
   );
 }
