@@ -13,25 +13,32 @@ const tones = {
   neutral: { container: "bg-surface-muted", text: "default" }, // amenities
 } as const satisfies Record<string, { container: string; text: TextTone }>;
 
+const sizes = {
+  md: { container: "h-9 gap-1.5 px-4", text: "caption" },
+  sm: { container: "h-7 gap-1 px-3", text: "label" }, // amenities in result rows
+} as const;
+
 export type BadgeProps = {
   label: string;
   tone?: keyof typeof tones;
+  size?: keyof typeof sizes;
   icon?: ReactNode;
   /** Layout only (margins, alignment). */
   className?: string;
 };
 
-export function Badge({ label, tone = "neutral", icon, className }: BadgeProps) {
+export function Badge({ label, tone = "neutral", size = "md", icon, className }: BadgeProps) {
   return (
     <View
       className={cn(
-        "h-9 flex-row items-center gap-1.5 self-start rounded-full px-4",
+        "flex-row items-center self-start rounded-full",
+        sizes[size].container,
         tones[tone].container,
         className,
       )}
     >
       {icon}
-      <Text variant="caption" tone={tones[tone].text}>
+      <Text variant={sizes[size].text} tone={tones[tone].text}>
         {label}
       </Text>
     </View>

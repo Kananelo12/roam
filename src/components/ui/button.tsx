@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
-import { ActivityIndicator, Pressable, View, type PressableProps } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 import { cn } from "@/lib/cn";
 import { colors } from "@/theme";
 
+import { PressableScale, type PressableScaleProps } from "./pressable-scale";
 import { Text } from "./text";
 
 const variants = {
@@ -16,7 +17,7 @@ const sizes = {
   sm: { container: "h-10 gap-2 px-5", text: "caption", trailing: "right-5" },
 } as const;
 
-export type ButtonProps = Omit<PressableProps, "children"> & {
+export type ButtonProps = Omit<PressableScaleProps, "children" | "fill"> & {
   title: string;
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
@@ -43,13 +44,13 @@ export function Button({
   const isDisabled = !!disabled || loading;
 
   return (
-    <Pressable
+    <PressableScale
       accessibilityRole="button"
       accessibilityLabel={title}
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       disabled={isDisabled}
       className={cn(
-        "flex-row items-center justify-center rounded-full active:opacity-80",
+        "flex-row items-center justify-center rounded-full",
         // Loading blocks presses but keeps full strength so the spinner reads clearly.
         disabled && !loading && "opacity-40",
         variants[variant].container,
@@ -67,6 +68,6 @@ export function Button({
           {trailing ? <View className={cn("absolute", sizes[size].trailing)}>{trailing}</View> : null}
         </>
       )}
-    </Pressable>
+    </PressableScale>
   );
 }

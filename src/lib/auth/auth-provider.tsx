@@ -62,6 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           userId: user.id,
           name: user.fullName ?? user.firstName ?? "",
           email: user.primaryEmailAddress?.emailAddress ?? "",
+          imageUrl: user.hasImage ? user.imageUrl : null,
         }
       : null;
 

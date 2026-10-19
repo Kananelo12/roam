@@ -4,9 +4,13 @@ import { cn } from "@/lib/cn";
 
 const variants = {
   display: "font-display text-display", // hero headlines, 56/56
+  masthead: "font-display-heavy text-masthead", // Home headline, 46/40
   hero: "font-display-heavy text-hero", // onboarding titles, 36/39
   title: "font-display text-title", // screen and section headings, 30/36
+  feature: "font-display text-feature", // card titles over photos, 28/28
   headline: "font-display text-headline", // card titles, prices, 20/26
+  lead: "font-body-semibold text-headline", // greetings, 20/26
+  listing: "font-display text-listing", // result row titles, 18/20
   subhead: "font-body-semibold text-body", // row titles, 16/24
   callout: "font-body-medium text-body", // field labels, list rows, 16/24
   body: "font-body text-body", // paragraphs, 16/24

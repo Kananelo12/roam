@@ -1,10 +1,13 @@
+export { AnimatedView, type AnimatedViewProps } from "./animated-view";
 export { AppleLogo, type AppleLogoProps } from "./apple-logo";
+export { Avatar, type AvatarProps } from "./avatar";
 export { Badge,type BadgeProps } from "./badge";
 export { Button, type ButtonProps } from "./button";
 export { Chip, type ChipProps } from "./chip";
 export { GoogleLogo, type GoogleLogoProps } from "./google-logo";
 export { Icon,type IconProps, type IconTone } from "./icon";
 export { IconButton, type IconButtonProps } from "./icon-button";
+export { PressableScale, type PressableScaleProps } from "./pressable-scale";
 export { Text, type TextProps, type TextTone, type TextVariant } from "./text";
 export { TextField, type TextFieldProps } from "./text-field";
 export { Wordmark, type WordmarkProps } from "./wordmark";

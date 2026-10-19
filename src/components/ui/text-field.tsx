@@ -14,6 +14,8 @@ export type TextFieldProps = TextInputProps & {
   leading?: ReactNode;
   /** Control at the end, e.g. filters or a show-password toggle. */
   trailing?: ReactNode;
+  /** `pill` for standalone search fields; forms keep `rounded`. */
+  shape?: "rounded" | "pill";
   /** Validation message: shown under the field with a danger border. */
   error?: string;
   /** Layout only, applied to the outer wrapper. */
@@ -25,6 +27,7 @@ export function TextField({
   label,
   leading,
   trailing,
+  shape = "rounded",
   error,
   className,
   onFocus,
@@ -74,7 +77,8 @@ export function TextField({
           input?.focus();
         }}
         className={cn(
-          "flex-row items-center rounded-lg border",
+          "flex-row items-center border",
+          shape === "pill" ? "rounded-full" : "rounded-lg",
           label ? "h-15 gap-6 px-5" : "h-14 gap-3 px-4",
           error
             ? cn("border-danger", focused ? "bg-secondary-soft" : "bg-surface-muted")

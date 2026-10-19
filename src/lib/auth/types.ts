@@ -2,6 +2,8 @@ export type Session = {
   userId: string;
   name: string;
   email: string;
+  /** Profile photo (Google, or uploaded); null shows initials. */
+  imageUrl: string | null;
 };
 
 export type AuthField = "name" | "email" | "password" | "code" | "form";

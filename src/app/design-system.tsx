@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import ArrowRight from "lucide-react-native/icons/arrow-right";
+import ArrowUpRight from "lucide-react-native/icons/arrow-up-right";
+import Bath from "lucide-react-native/icons/bath";
 import Bookmark from "lucide-react-native/icons/bookmark";
 import Building from "lucide-react-native/icons/building";
 import ChevronLeft from "lucide-react-native/icons/chevron-left";
@@ -8,6 +10,7 @@ import Heart from "lucide-react-native/icons/heart";
 import House from "lucide-react-native/icons/house";
 import Lock from "lucide-react-native/icons/lock";
 import Mail from "lucide-react-native/icons/mail";
+import PawPrint from "lucide-react-native/icons/paw-print";
 import Search from "lucide-react-native/icons/search";
 import Share from "lucide-react-native/icons/share";
 import SlidersHorizontal from "lucide-react-native/icons/sliders-horizontal";
@@ -19,6 +22,7 @@ import { useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 
 import {
+  Avatar,
   Badge,
   Button,
   Chip,
@@ -60,8 +64,14 @@ export default function DesignSystemScreen() {
 
         <Section title="Typography">
           <Text variant="display">Find your next stay</Text>
+          <Text variant="masthead">{"Find your\nnext stay"}</Text>
           <Text variant="title">Modern Cabin with Hot Tub</Text>
+          <Text variant="feature">{"Modern Cabin\nwith Hot Tub"}</Text>
           <Text variant="headline">$280 / night</Text>
+          <Text variant="lead" tone="muted">
+            Hey, Joanna 👋
+          </Text>
+          <Text variant="listing">{"Oceanview Villa\nwith Private Pool"}</Text>
           <Text variant="subhead">Ask about policies</Text>
           <Text variant="callout">Personal info</Text>
           <Text variant="body" tone="muted">
@@ -88,9 +98,26 @@ export default function DesignSystemScreen() {
             <IconButton accessibilityLabel="Bookmark" icon={<Icon as={Bookmark} />} />
             <IconButton accessibilityLabel="Back" variant="outline" size="sm" icon={<Icon as={ChevronLeft} />} />
           </View>
+          <View className="flex-row items-center gap-3 self-start rounded-full bg-secondary p-2">
+            <IconButton
+              accessibilityLabel="Search"
+              variant="surface-flat"
+              size="sm"
+              icon={<Icon as={ArrowUpRight} />}
+            />
+          </View>
+          <View className="flex-row items-center gap-3">
+            <Avatar uri={null} name="Joanna Smith" />
+            <Avatar uri={null} name="Joanna Smith" size="md" />
+          </View>
         </Section>
 
         <Section title="Input fields">
+          <TextField
+            shape="pill"
+            placeholder="Cabins in California"
+            leading={<Icon as={Search} />}
+          />
           <TextField
             placeholder="Cabins in California"
             leading={<Icon as={Search} />}
@@ -159,6 +186,10 @@ export default function DesignSystemScreen() {
             <Badge label="20% off" tone="danger" />
             <Badge label="Superhost" tone="info" />
             <Badge label="Hot Tub" />
+          </View>
+          <View className="flex-row flex-wrap gap-2">
+            <Badge size="sm" label="Hot Tub" icon={<Icon as={Bath} size={14} />} />
+            <Badge size="sm" label="Pet Friendly" icon={<Icon as={PawPrint} size={14} />} />
           </View>
         </Section>
 

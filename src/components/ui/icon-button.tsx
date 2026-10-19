@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
-import { Pressable, type PressableProps } from "react-native";
 
 import { cn } from "@/lib/cn";
+
+import { PressableScale, type PressableScaleProps } from "./pressable-scale";
 
 const variants = {
   muted: "bg-surface-muted", // on white surfaces
   surface: "bg-surface shadow-card", // floating over photos
+  "surface-flat": "bg-surface", // inside a colored field (Home search pill)
   outline: "border border-border bg-surface", // headers on white (auth back button)
   primary: "bg-primary",
 } as const;
@@ -15,7 +17,7 @@ const sizes = {
   sm: "size-11",
 } as const;
 
-export type IconButtonProps = Omit<PressableProps, "children"> & {
+export type IconButtonProps = Omit<PressableScaleProps, "children" | "fill"> & {
   icon: ReactNode;
   /** Required: icon-only controls have no visible text label. */
   accessibilityLabel: string;
@@ -33,10 +35,10 @@ export function IconButton({
   ...props
 }: IconButtonProps) {
   return (
-    <Pressable
+    <PressableScale
       accessibilityRole="button"
       className={cn(
-        "items-center justify-center rounded-full active:opacity-70 disabled:opacity-40",
+        "items-center justify-center rounded-full disabled:opacity-40",
         variants[variant],
         sizes[size],
         className,
@@ -44,6 +46,6 @@ export function IconButton({
       {...props}
     >
       {icon}
-    </Pressable>
+    </PressableScale>
   );
 }

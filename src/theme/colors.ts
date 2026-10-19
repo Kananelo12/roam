@@ -23,6 +23,7 @@ export const colors = {
   glass: "rgba(255, 255, 255, 0.7)",
   scrim: "rgba(11, 11, 26, 0.45)",
   glassBorder: "rgba(255, 255, 255, 0.35)",
+  photoScrim: "rgba(11, 11, 26, 0.72)",
   success: "#1f9d55",
   successSoft: "#e7f6ed",
   danger: "#e5484d",
