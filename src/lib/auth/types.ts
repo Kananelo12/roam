@@ -17,4 +17,5 @@ export class AuthError extends Error {
   }
 }
 
-export type Provider = "google" | "apple";
+/** Social sign-in providers enabled in Clerk. */
+export type Provider = "google";

@@ -1,7 +1,7 @@
-import { ClerkProvider } from "@clerk/expo";
-import { tokenCache } from "@clerk/expo/token-cache";
 import "@/global.css";
 
+import { ClerkProvider } from "@clerk/expo";
+import { tokenCache } from "@clerk/expo/token-cache";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -13,20 +13,12 @@ import { AuthProvider, useAuth } from "@/lib/auth";
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
 
 if (!publishableKey) {
-  throw new Error("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY. Add your key to .env.local.\nRun: 1) clerk auth login  2) clerk link  3) clerk env pull — then restart the dev server.");
+  throw new Error("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY. Copy .env.example to .env.local and fill it in.");
 }
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const fontsReady = useAppFonts();
-
-  useEffect(() => {
-    if (fontsReady) SplashScreen.hideAsync();
-  }, [fontsReady]);
-
-  if (!fontsReady) return null;
-
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <AuthProvider>
@@ -40,8 +32,17 @@ export default function RootLayout() {
 
 /** Signed-out guests only reach onboarding and auth; signed-in guests only reach the app. */
 function RootStack() {
-  const { session } = useAuth();
+  const fontsReady = useAppFonts();
+  const { isLoaded, session } = useAuth();
+  // Wait for Clerk to restore a saved session, so signed-in guests never see onboarding flash.
+  const ready = fontsReady && isLoaded;
   const signedIn = session !== null;
+
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync();
+  }, [ready]);
+
+  if (!ready) return null;
 
   return (
     <Stack>

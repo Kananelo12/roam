@@ -6,14 +6,17 @@ import { Pressable, View } from "react-native";
 import { AuthScreen } from "@/components/auth/auth-screen";
 import { CODE_LENGTH, CodeInput } from "@/components/auth/code-input";
 import { Button, Icon, Text } from "@/components/ui";
-import { AuthError, MOCK_CODE, useAuth } from "@/lib/auth";
+import { AuthError, useAuth } from "@/lib/auth";
 
 const RESEND_COOLDOWN_S = 30;
 
+/** Clerk dev instances accept this code for +clerk_test emails without sending mail. */
+const TEST_CODE = "424242";
+
 export default function VerifyEmailScreen() {
-  const { pendingEmail, verifyEmail, resendCode } = useAuth();
-  // Captured once: a successful verify clears pendingEmail while this screen unmounts.
-  const [email] = useState(pendingEmail);
+  const { pendingVerification, verifyEmail, resendCode } = useAuth();
+  // Captured once: a successful verify clears pendingVerification while this screen unmounts.
+  const [pending] = useState(pendingVerification);
   const [code, setCode] = useState("");
   const [error, setError] = useState<string>();
   const [verifying, setVerifying] = useState(false);
@@ -27,7 +30,8 @@ export default function VerifyEmailScreen() {
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  if (!email) return <Redirect href="/sign-up" />;
+  if (!pending) return <Redirect href="/sign-up" />;
+  const { email, flow } = pending;
 
   // On success the session starts and the root layout's guard routes to home.
   const verify = async (value: string) => {
@@ -62,6 +66,9 @@ export default function VerifyEmailScreen() {
       await resendCode();
       setResent(true);
       setCooldown(RESEND_COOLDOWN_S);
+    } catch (e) {
+      if (!(e instanceof AuthError)) throw e;
+      setError(e.message);
     } finally {
       setResending(false);
     }
@@ -74,15 +81,15 @@ export default function VerifyEmailScreen() {
       title={"Check your\nemail"}
       body={
         <>
-          We sent a 6-digit code to <Text variant="subhead">{email}</Text>. Enter it below to verify your
-          account.
+          We sent a 6-digit code to <Text variant="subhead">{email}</Text>.{" "}
+          {flow === "sign-in" ? "Enter it below to confirm it's you." : "Enter it below to verify your account."}
         </>
       }
     >
       <CodeInput value={code} onChangeText={onChangeCode} error={error} />
-      {__DEV__ ? (
+      {__DEV__ && email.includes("+clerk_test") ? (
         <Text variant="label" tone="muted" className="mt-3">
-          Mock code: {MOCK_CODE}
+          Test emails with +clerk_test use code {TEST_CODE}
         </Text>
       ) : null}
 

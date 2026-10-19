@@ -1,3 +1,4 @@
+import { router, useLocalSearchParams } from "expo-router";
 import ArrowRight from "lucide-react-native/icons/arrow-right";
 import Mail from "lucide-react-native/icons/mail";
 import { useRef } from "react";
@@ -14,6 +15,8 @@ import { useAuth, validateEmail, validatePassword } from "@/lib/auth";
 
 export default function SignInScreen() {
   const { signIn, signInWithProvider } = useAuth();
+  // Set by +native-intent.tsx when Android killed the app during Google sign-in.
+  const { sso } = useLocalSearchParams<{ sso?: string }>();
   const passwordRef = useRef<TextInput>(null);
   const form = useAuthForm(
     { email: "", password: "" },
@@ -21,9 +24,13 @@ export default function SignInScreen() {
   );
 
   // A successful sign-in starts a session; the root layout's guard then routes to home.
+  // A new device first needs the emailed code.
   const submit = () => {
     if (!form.validate()) return;
-    form.run("submit", () => signIn(form.values));
+    form.run("submit", async () => {
+      const { needsCode } = await signIn(form.values);
+      if (needsCode) router.push("/verify-email");
+    });
   };
 
   return (
@@ -67,6 +74,10 @@ export default function SignInScreen() {
         <Text variant="caption" tone="danger" className="mt-4">
           {form.errors.form}
         </Text>
+      ) : sso === "interrupted" ? (
+        <Text variant="caption" tone="danger" className="mt-4">
+          Google sign-in was interrupted. Try again.
+        </Text>
       ) : null}
 
       <Button
@@ -78,7 +89,13 @@ export default function SignInScreen() {
         onPress={submit}
       />
       <OrDivider />
-      <SocialButtons busy={form.busy} onPress={(p) => form.run(p, () => signInWithProvider(p))} />
+      <SocialButtons
+        busy={form.busy}
+        onPress={(p) => {
+          router.setParams({ sso: undefined });
+          form.run(p, () => signInWithProvider(p));
+        }}
+      />
     </AuthScreen>
   );
 }

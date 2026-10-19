@@ -99,6 +99,8 @@ export default function SignUpScreen() {
       />
       <OrDivider />
       <SocialButtons busy={form.busy} onPress={(p) => form.run(p, () => signInWithProvider(p))} />
+      {/* Mount point for Clerk's bot protection when it's turned on. */}
+      <View nativeID="clerk-captcha" />
     </AuthScreen>
   );
 }

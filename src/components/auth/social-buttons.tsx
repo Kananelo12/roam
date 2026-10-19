@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-import { AppleLogo, Button, GoogleLogo } from "@/components/ui";
+import { Button, GoogleLogo } from "@/components/ui";
 import type { Provider } from "@/lib/auth";
 
 type SocialButtonsProps = {
@@ -9,6 +9,7 @@ type SocialButtonsProps = {
   busy: "submit" | Provider | null;
 };
 
+/** Apple returns once it's enabled in Clerk; AppleLogo stays in components/ui for it. */
 export function SocialButtons({ onPress, busy }: SocialButtonsProps) {
   return (
     <View className="gap-3">
@@ -19,14 +20,6 @@ export function SocialButtons({ onPress, busy }: SocialButtonsProps) {
         loading={busy === "google"}
         disabled={busy !== null}
         onPress={() => onPress("google")}
-      />
-      <Button
-        title="Continue with Apple"
-        variant="secondary"
-        leading={<AppleLogo />}
-        loading={busy === "apple"}
-        disabled={busy !== null}
-        onPress={() => onPress("apple")}
       />
     </View>
   );
