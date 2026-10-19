@@ -152,7 +152,7 @@ function TabBar({
           blurTarget={blurTarget}
           blurMethod="dimezisBlurViewSdk31Plus"
           tint="light"
-          intensity={50}
+          intensity={40}
           style={StyleSheet.absoluteFill}
         />
       </View>
